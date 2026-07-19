@@ -1,1 +1,219 @@
-# jpfogamer-ai.github.io
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Real princesa do dramaa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#CCE6FF;
+    --paper:#F3FBFF;
+    --line:#B7DBFF;
+    --ink:#2A4D7A;
+    --stamp:#5A8CD1;
+    --gold:#A3C8FF;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    min-height:100vh; background:var(--bg); display:flex; align-items:center; justify-content:center;
+    padding: 24px 16px; font-family:'Space Mono', monospace; color: var(--ink);
+  }
+  .page{ width:100%; max-width: 400px; background: var(--paper); border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.35); overflow:hidden; }
+
+  h1{ font-family:'Caveat', cursive; font-size: 34px; margin: 0; color: var(--ink); }
+  header{ padding: 26px 26px 4px; }
+
+  .step{ display:none; padding: 8px 26px 26px; }
+  .step.active{ display:block; }
+  .count{ font-size: 11px; color: var(--stamp); letter-spacing: 1px; margin: 0 0 14px; }
+  .q{ font-size: 15px; font-weight:700; margin: 0 0 16px; line-height:1.35; }
+
+  .chips{ display:flex; flex-wrap:wrap; gap: 8px; margin-bottom: 12px; }
+  .chip{ font-size: 12.5px; padding: 8px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--ink); cursor:pointer; font-family:'Space Mono', monospace; }
+  .chip.active{ background: var(--gold); border-color: var(--gold); color: var(--paper); }
+
+  textarea, input[type=date], input[type=time]{
+    width:100%; font-family:'Space Mono', monospace; font-size: 14px; padding: 12px; margin-top:4px;
+    border: 1.5px solid var(--line); border-radius: 6px; background: #fff8f1; color: var(--ink); outline:none;
+  }
+  textarea{ resize:vertical; min-height:56px; }
+  textarea:focus, input:focus{ border-color: var(--gold); }
+  input[type=time]{ margin-top:10px; }
+
+  .choice{ display:flex; flex-direction:column; gap:8px; margin-bottom:4px; }
+  .card{ text-align:left; font-size: 13.5px; padding: 13px 14px; border-radius: 6px; border: 1.5px solid var(--line); background: transparent; color: var(--ink); cursor:pointer; font-family:'Space Mono', monospace; }
+  .card.active{ border-color: var(--gold); background: rgba(190,143,63,0.15); }
+
+  .err{ font-size: 11.5px; color: var(--stamp); min-height:14px; margin: 10px 0 0; }
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top: 18px; }
+  .back{ background:none; border:none; font-size:11px; color:var(--ink); opacity:0.55; text-decoration:underline; cursor:pointer; }
+  .next{ margin-left:auto; font-size: 12.5px; letter-spacing:0.5px; padding: 12px 16px; border:none; border-radius:6px; background: var(--stamp); color: var(--paper); cursor:pointer; }
+  .next:active{ transform: scale(0.98); }
+
+  #confirm{ display:none; padding: 26px; text-align:center; }
+  #confirm h2{ font-family:'Caveat', cursive; font-size: 30px; margin: 0 0 16px; color: var(--stamp); }
+  .ticket{ text-align:left; font-size: 12.5px; line-height:1.9; border-top:1.5px dashed var(--line); border-bottom:1.5px dashed var(--line); padding: 14px 2px; margin-bottom:18px; }
+  .ticket b{ color: var(--stamp); }
+  .actions{ display:flex; flex-direction:column; gap:8px; }
+  .sec{ font-size:12.5px; padding: 11px; border-radius:6px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); cursor:pointer; }
+  .sec:hover{ background:var(--ink); color:var(--paper); }
+  #copyMsg{ font-size:11px; color: var(--gold); min-height:14px; }
+</style>
+</head>
+<body>
+<main class="page">
+  <header><h1>Para Real princesa do dramaa</h1></header>
+
+  <div id="form">
+    <div class="step active" data-step="1">
+      <p class="count">1/3</p>
+      <p class="q">O que você quer comer?</p>
+      <div class="chips" id="chips">
+        <button type="button" class="chip" data-v="Pizza 🍕">Pizza 🍕</button>
+        <button type="button" class="chip" data-v="Hambúrguer 🍔">Hambúrguer 🍔</button>
+        <button type="button" class="chip" data-v="Japonesa 🍣">Japonesa 🍣</button>
+        <button type="button" class="chip" data-v="Massa 🍝">Massa 🍝</button>
+        <button type="button" class="chip" data-v="Doce 🍰">Doce 🍰</button>
+        <button type="button" class="chip" data-v="Surpresa ">Surpresa / "Não seiii" </button>
+      </div>
+      <textarea id="comp" placeholder="quer completar? (cinema, parque, shopping...)"></textarea>
+      <p class="err" id="err1"></p>
+      <div class="nav"><button type="button" class="next" id="n1">próxima →</button></div>
+    </div>
+
+    <div class="step" data-step="2">
+      <p class="count">2/3</p>
+      <p class="q">Escolhe o lugar ou quer surpresa?</p>
+      <div class="choice" id="lugar">
+        <button type="button" class="card" data-v="Ela escolhe"> Eu escolho o lugar</button>
+        <button type="button" class="card" data-v="Surpresa"> Prefiro surpresa</button>
+      </div>
+      <textarea id="lugarTxt" placeholder="qual lugar?" style="display:none; margin-top:10px;"></textarea>
+      <p class="err" id="err2"></p>
+      <div class="nav"><button type="button" class="back" data-back="1">‹ voltar</button><button type="button" class="next" id="n2">próxima →</button></div>
+    </div>
+
+    <div class="step" data-step="3">
+      <p class="count">3/3</p>
+      <p class="q">Quando e que horas?</p>
+      <input type="date" id="data">
+      <input type="time" id="hora">
+      <p class="err" id="err3"></p>
+      <div class="nav"><button type="button" class="back" data-back="2">‹ voltar</button><button type="button" class="next" id="marcar">marcar ✅</button></div>
+    </div>
+  </div>
+
+  <div id="confirm">
+    <h2>Marcado!</h2>
+    <div class="ticket" id="resumo"></div>
+    <div class="actions">
+      <button type="button" class="sec" id="btnIcs">baixar no calendário</button>
+      <button type="button" class="sec" id="btnCopy">copiar resposta</button>
+      <span id="copyMsg"></span>
+    </div>
+  </div>
+</main>
+
+<script>
+  const MEU_NOME = "João Pedro";
+
+  const steps = document.querySelectorAll('.step');
+  const chips = document.getElementById('chips');
+  const comp = document.getElementById('comp');
+  const lugar = document.getElementById('lugar');
+  const lugarTxt = document.getElementById('lugarTxt');
+  const data = document.getElementById('data');
+  const hora = document.getElementById('hora');
+  const form = document.getElementById('form');
+  const confirm = document.getElementById('confirm');
+  const resumo = document.getElementById('resumo');
+
+  let selLugar = null;
+  let ultimo = null;
+
+  function showStep(n){ steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n)); }
+  document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => showStep(Number(b.dataset.back))));
+
+  chips.addEventListener('click', e => { const c = e.target.closest('.chip'); if (c) c.classList.toggle('active'); });
+
+  lugar.addEventListener('click', e => {
+    const c = e.target.closest('.card'); if (!c) return;
+    document.querySelectorAll('.card').forEach(x => x.classList.remove('active'));
+    c.classList.add('active'); selLugar = c.dataset.v;
+    lugarTxt.style.display = selLugar === 'Ela escolhe' ? 'block' : 'none';
+  });
+
+  function foods(){ return Array.from(document.querySelectorAll('.chip.active')).map(c => c.dataset.v); }
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function esc(t){ return String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
+
+  document.getElementById('n1').addEventListener('click', () => {
+    if (foods().length === 0 && comp.value.trim() === ''){ document.getElementById('err1').textContent = 'escolhe algo ou escreve ali 👆'; return; }
+    document.getElementById('err1').textContent = '';
+    showStep(2);
+  });
+
+  document.getElementById('n2').addEventListener('click', () => {
+    if (!selLugar){ document.getElementById('err2').textContent = 'escolhe uma opção 👆'; return; }
+    document.getElementById('err2').textContent = '';
+    showStep(3);
+  });
+
+  document.getElementById('marcar').addEventListener('click', () => {
+    if (!data.value){ document.getElementById('err3').textContent = 'falta o dia 👆'; return; }
+    if (!hora.value){ document.getElementById('err3').textContent = 'falta a hora 👆'; return; }
+    document.getElementById('err3').textContent = '';
+
+    const comidaTxt = foods().length ? foods().join(', ') : '(a definir)';
+    const compTxt = comp.value.trim();
+    const lugarTxtFinal = selLugar === 'Ela escolhe' ? `Ela escolhe${lugarTxt.value.trim() ? ' — ' + lugarTxt.value.trim() : ''}` : 'Surpresa';
+    const [y,m,d] = data.value.split('-').map(Number);
+    const dataBonita = new Date(y, m-1, d).toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+    const [hh, mm] = hora.value.split(':');
+
+    ultimo = { comidaTxt, compTxt, lugarTxtFinal, dataVal: data.value, dataBonita, hh, mm };
+
+    let html = `<div><b>comer:</b> ${comidaTxt}</div>`;
+    if (compTxt) html += `<div><b>+:</b> ${compTxt}</div>`;
+    html += `<div><b>lugar:</b> ${lugarTxtFinal}</div>`;
+    html += `<div><b>quando:</b> ${dataBonita}, ${hh}h${mm}</div>`;
+    resumo.innerHTML = html;
+
+    form.style.display = 'none';
+    confirm.style.display = 'block';
+  });
+
+  document.getElementById('btnIcs').addEventListener('click', () => {
+    if (!ultimo) return;
+    const [y,m,d] = ultimo.dataVal.split('-').map(Number);
+    const start = new Date(y, m-1, d, Number(ultimo.hh), Number(ultimo.mm));
+    const end = new Date(start.getTime() + 2*60*60*1000);
+    const fmt = dt => `${dt.getFullYear()}${pad(dt.getMonth()+1)}${pad(dt.getDate())}T${pad(dt.getHours())}${pad(dt.getMinutes())}00`;
+    const now = new Date();
+    const stamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth()+1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`;
+    let desc = `Convite de ${MEU_NOME}. Comer: ${ultimo.comidaTxt}. Lugar: ${ultimo.lugarTxtFinal}.`;
+    if (ultimo.compTxt) desc += ` Combinado: ${ultimo.compTxt}.`;
+    const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//encontro//pt-BR','BEGIN:VEVENT',
+      `UID:${stamp}-encontro@nossoencontro`,`DTSTAMP:${stamp}`,`DTSTART:${fmt(start)}`,`DTEND:${fmt(end)}`,
+      `SUMMARY:${esc('Encontro 💕')}`,`DESCRIPTION:${esc(desc)}`,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'encontro.ics';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('btnCopy').addEventListener('click', async () => {
+    if (!ultimo) return;
+    let t = `Comer: ${ultimo.comidaTxt}\n`;
+    if (ultimo.compTxt) t += `+: ${ultimo.compTxt}\n`;
+    t += `Lugar: ${ultimo.lugarTxtFinal}\nQuando: ${ultimo.dataBonita}, ${ultimo.hh}h${ultimo.mm}`;
+    try{ await navigator.clipboard.writeText(t); document.getElementById('copyMsg').textContent = 'copiado!'; }
+    catch(e){ document.getElementById('copyMsg').textContent = 'seleciona o texto acima'; }
+  });
+</script>
+</body>
+</html>
