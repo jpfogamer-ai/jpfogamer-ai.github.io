@@ -152,20 +152,20 @@
   function esc(t){ return String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
 
   document.getElementById('n1').addEventListener('click', () => {
-    if (foods().length === 0 && comp.value.trim() === ''){ document.getElementById('err1').textContent = 'escolhe algo ou escreve ali 👆'; return; }
+    if (foods().length === 0 && comp.value.trim() === ''){ document.getElementById('err1').textContent = 'escolhe algo ou escreve ali'; return; }
     document.getElementById('err1').textContent = '';
     showStep(2);
   });
 
   document.getElementById('n2').addEventListener('click', () => {
-    if (!selLugar){ document.getElementById('err2').textContent = 'escolhe uma opção 👆'; return; }
+    if (!selLugar){ document.getElementById('err2').textContent = 'escolhe uma opção'; return; }
     document.getElementById('err2').textContent = '';
     showStep(3);
   });
 
   document.getElementById('marcar').addEventListener('click', () => {
-    if (!data.value){ document.getElementById('err3').textContent = 'falta o dia 👆'; return; }
-    if (!hora.value){ document.getElementById('err3').textContent = 'falta a hora 👆'; return; }
+    if (!data.value){ document.getElementById('err3').textContent = 'falta o dia'; return; }
+    if (!hora.value){ document.getElementById('err3').textContent = 'falta a hora'; return; }
     document.getElementById('err3').textContent = '';
 
     const comidaTxt = foods().length ? foods().join(', ') : '(a definir)';
